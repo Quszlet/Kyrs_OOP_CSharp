@@ -36,13 +36,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Verdana", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(321, 9);
+            this.label1.Location = new System.Drawing.Point(321, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(423, 48);
             this.label1.TabIndex = 0;
@@ -50,9 +52,10 @@
             // 
             // label2
             // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(84, 70);
+            this.label2.Location = new System.Drawing.Point(84, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(893, 116);
             this.label2.TabIndex = 1;
@@ -61,7 +64,8 @@
             // 
             // StartWork
             // 
-            this.StartWork.Location = new System.Drawing.Point(447, 205);
+            this.StartWork.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.StartWork.Location = new System.Drawing.Point(447, 220);
             this.StartWork.Name = "StartWork";
             this.StartWork.Size = new System.Drawing.Size(164, 34);
             this.StartWork.TabIndex = 2;
@@ -71,7 +75,8 @@
             // 
             // Exit
             // 
-            this.Exit.Location = new System.Drawing.Point(475, 254);
+            this.Exit.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Exit.Location = new System.Drawing.Point(475, 269);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(109, 34);
             this.Exit.TabIndex = 3;
@@ -81,6 +86,7 @@
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label4.Location = new System.Drawing.Point(12, 416);
@@ -92,6 +98,7 @@
             // 
             // linkLabel1
             // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(197, 417);
             this.linkLabel1.Name = "linkLabel1";
@@ -103,6 +110,7 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label3.Location = new System.Drawing.Point(12, 382);
@@ -112,12 +120,25 @@
             this.label3.Text = "Проект на Github:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // LibraryForm
+            // linkLabel2
+            // 
+            this.linkLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(212, 383);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(376, 25);
+            this.linkLabel2.TabIndex = 8;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "https://github.com/Quszlet/Kyrs_OOP_CSharp";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked_1);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.PaleGreen;
+            this.BackColor = System.Drawing.Color.PapayaWhip;
             this.ClientSize = new System.Drawing.Size(1047, 450);
+            this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label4);
@@ -126,7 +147,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "LibraryForm";
+            this.Name = "MainForm";
             this.Text = "Библиотека";
             this.Load += new System.EventHandler(this.LibraryForm_Load);
             this.ResumeLayout(false);
@@ -143,5 +164,6 @@
         private Label label4;
         private LinkLabel linkLabel1;
         private Label label3;
+        private LinkLabel linkLabel2;
     }
 }
