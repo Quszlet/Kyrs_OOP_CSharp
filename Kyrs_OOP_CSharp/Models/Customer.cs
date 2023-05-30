@@ -20,9 +20,8 @@ namespace Kyrs_OOP_CSharp
 
         }
 
-        public Customer(string id, string name, string surname, int idBook, string takingDate, string returnDate)
+        public Customer(string name, string surname, int idBook, string takingDate, string returnDate)
         {
-            Id = id;
             Name = name;
             Surname = surname;
             IdBook = idBook;

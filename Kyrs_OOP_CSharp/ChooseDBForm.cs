@@ -7,16 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Kyrs_OOP_CSharp.repository;
 
 namespace Kyrs_OOP_CSharp
 {
     public partial class ChooseDBForm : Form
     {
-        private Repository repository;
-        public ChooseDBForm(Repository repository)
+        private string FilePathDB;
+        public ChooseDBForm(string filePath)
         {
             InitializeComponent();
-            this.repository = repository;
+            this.FilePathDB = filePath;
         }
 
         private void Exit_Click(object sender, EventArgs e)
@@ -26,14 +27,14 @@ namespace Kyrs_OOP_CSharp
 
         private void CustomersButton_Click(object sender, EventArgs e)
         {
-            CustomersDBForm customersDBForm = new CustomersDBForm(repository);
+            CustomersDBForm customersDBForm = new CustomersDBForm(FilePathDB);
             customersDBForm.Show();
             Close();
         }
 
         private void BooksButton_Click(object sender, EventArgs e)
         {
-            BooksDBForm booksDBForm = new BooksDBForm(repository);
+            BooksDBForm booksDBForm = new BooksDBForm(FilePathDB);
             booksDBForm.Show();
             Close();
         }

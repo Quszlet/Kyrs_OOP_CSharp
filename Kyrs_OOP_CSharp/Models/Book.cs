@@ -22,6 +22,15 @@ namespace Kyrs_OOP_CSharp
             Theme = "";
         }
 
+        public Book(int id, string nameBook, string authorName, string authorSurname, string theme)
+        {
+            Id = id;
+            NameBook = nameBook;
+            AuthorName = authorName;
+            AuthorSurname = authorSurname;
+            Theme = theme;
+        }
+
         public Book(string nameBook, string authorName, string authorSurname, string theme)
         {
             NameBook = nameBook;

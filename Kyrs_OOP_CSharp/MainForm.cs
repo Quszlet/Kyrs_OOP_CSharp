@@ -1,14 +1,17 @@
+using Kyrs_OOP_CSharp.repository;
 using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Kyrs_OOP_CSharp
 {
     public partial class MainForm : Form
     {
-        private Repository repository;
+        private Repository Repository;
+        private string FilePathDB;
         public MainForm()
         {
             InitializeComponent();
-            repository = new Repository("C:\\Users\\izgar\\source\\repos\\Kyrs_OOP_CSharp\\Kyrs_OOP_CSharp\\database\\libraryDB");
+            FilePathDB = "C:\\Users\\izgar\\source\\repos\\Kyrs_OOP_CSharp\\Kyrs_OOP_CSharp\\database\\library";
+            Repository = new Repository(FilePathDB);
         }
 
         private void LibraryForm_Load(object sender, EventArgs e)
@@ -32,7 +35,7 @@ namespace Kyrs_OOP_CSharp
         private void StartWork_Click(object sender, EventArgs e)
         {
             Hide();
-            ChooseDBForm libraryFomr = new ChooseDBForm(repository);
+            ChooseDBForm libraryFomr = new ChooseDBForm(FilePathDB);
             libraryFomr.Show();
         }
 
