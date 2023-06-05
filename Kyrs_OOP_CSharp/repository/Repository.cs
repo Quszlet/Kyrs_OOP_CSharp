@@ -14,7 +14,7 @@ namespace Kyrs_OOP_CSharp.repository
     {
 
         public string FilePath { get; set; }
-        public SqliteConnection connection;
+        public SqliteConnection connection { get; set; }
 
         public Repository(string filePath)
         {

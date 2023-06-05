@@ -51,6 +51,7 @@ namespace Kyrs_OOP_CSharp.repository
                     VALUES ('{book.NameBook}', '{book.AuthorName}', '{book.AuthorSurname}', '{book.Theme}')",
                     connection))
             {
+
                 command.ExecuteNonQuery();
             }
             connection.Close();
@@ -108,12 +109,13 @@ namespace Kyrs_OOP_CSharp.repository
             connection.Close();
         }
 
-        public void FindBooks(DataGridView dataGridView, string bookName, string authorName, string authorSurname, string theme)
+        public void FindBooks(DataGridView dataGridView, Book book)
         {
+            dataGridView.ClearSelection();
             connection.Open();
             using (var command = new SqliteCommand($@"
-                    SELECT id FROM books WHERE book_name LIKE '%{bookName}%' AND author_name LIKE '%{authorName}%'
-                    AND author_surname LIKE '%{authorSurname}%' AND theme LIKE '%{theme}%'",
+                    SELECT id FROM books WHERE book_name LIKE '%{book.NameBook}%' AND author_name LIKE '%{book.AuthorName}%'
+                    AND author_surname LIKE '%{book.AuthorSurname}%' AND theme LIKE '%{book.Theme}%'",
                     connection))
             {
                 using (var reader = command.ExecuteReader())
@@ -181,7 +183,7 @@ namespace Kyrs_OOP_CSharp.repository
             string[] authorNameSurname = author.Split(" ");
             List<string> booksName = new List<string>();
             connection.Open();
-            using (var command = new SqliteCommand($@"SELECT book_name FROM books WHERE 
+            using (var command = new SqliteCommand($@"SELECT DISTINCT book_name FROM books WHERE 
                     author_name = '{authorNameSurname[0]}' AND author_surname = '{authorNameSurname[1]}'", connection))
             {
                 using (var reader = command.ExecuteReader())

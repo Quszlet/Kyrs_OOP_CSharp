@@ -27,6 +27,30 @@ namespace Kyrs_OOP_CSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (textBox2.Text == "")
+            {
+                MessageBox.Show("Введите название книги!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (textBox3.Text == "")
+            {
+                MessageBox.Show("Введите имя автора!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (textBox4.Text == "")
+            {
+                MessageBox.Show("Введите фамилию автора!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (textBox5.Text == "")
+            {
+                MessageBox.Show("Введите тематику!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string bookName, authorName, authorSurname, theme;
             Book book;
             switch (comboBox2.SelectedIndex) {
@@ -35,6 +59,13 @@ namespace Kyrs_OOP_CSharp
                     authorName = textBox3.Text;
                     authorSurname = textBox4.Text;
                     theme = textBox5.Text;
+
+                    if (BookRepository.GetBook(bookName, authorName, authorSurname) != -1)
+                    {
+                        MessageBox.Show("Такая книга уже есть в библиотеке", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     book = new Book(bookName, authorName, authorSurname, theme);
                     BookRepository.SaveBook(book);
                     BookRepository.GetAllBooks(dataGridView1);
@@ -60,7 +91,7 @@ namespace Kyrs_OOP_CSharp
                     authorSurname = textBox4.Text;
                     theme = textBox5.Text;
                     book = new Book(idChange, bookName, authorName, authorSurname, theme);
-                    BookRepository.FindBooks(dataGridView1, bookName, authorName, authorSurname, theme);
+                    BookRepository.FindBooks(dataGridView1, book);
                     break;
             }
         }
@@ -166,12 +197,12 @@ namespace Kyrs_OOP_CSharp
             {
                 e.Cancel = true;
                 textBox.Focus();
-                MessageBox.Show("Ввести необходимо буквы русского алфавита(допускаются цифры)", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBox.BackColor = Color.Red;
+                MessageBox.Show("Ввести необходимо буквы русского алфавита(допускаются цифры)", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                textBox.BackColor = Color.Green;
+                textBox.BackColor = Color.White;
             }
         }
 
@@ -185,12 +216,12 @@ namespace Kyrs_OOP_CSharp
             {
                 e.Cancel = true;
                 textBox.Focus();
-                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBox.BackColor = Color.Red;
+                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                textBox.BackColor = Color.Green;
+                textBox.BackColor = Color.White;
             }
         }
 
@@ -204,12 +235,12 @@ namespace Kyrs_OOP_CSharp
             {
                 e.Cancel = true;
                 textBox.Focus();
-                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBox.BackColor = Color.Red;
+                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                textBox.BackColor = Color.Green;
+                textBox.BackColor = Color.White;
             }
         }
 
@@ -223,12 +254,12 @@ namespace Kyrs_OOP_CSharp
             {
                 e.Cancel = true;
                 textBox.Focus();
-                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 textBox.BackColor = Color.Red;
+                MessageBox.Show("Ввести необходимо буквы русского алфавита", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                textBox.BackColor = Color.Green;
+                textBox.BackColor = Color.White;
             }
         }
     }
