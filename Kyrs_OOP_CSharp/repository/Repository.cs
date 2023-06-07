@@ -39,6 +39,7 @@ namespace Kyrs_OOP_CSharp.repository
                     id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                     name TEXT NOT NULL,
                     surname TEXT NOT NULL,
+                    number_phone TEXT NOT NULL,
                     book_id INTEGER NOT NULL,
                     taking_data DATETIME NOT NULL,
                     return_data DATETIME NOT NULL,

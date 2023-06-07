@@ -10,7 +10,7 @@ namespace Kyrs_OOP_CSharp
         public MainForm()
         {
             InitializeComponent();
-            FilePathDB = "C:\\Users\\izgar\\source\\repos\\Kyrs_OOP_CSharp\\Kyrs_OOP_CSharp\\database\\library";
+            FilePathDB = System.IO.Path.GetFullPath("database");
             Repository = new Repository(FilePathDB);
         }
 

@@ -17,5 +17,7 @@ namespace Kyrs_OOP_CSharp.repository
         void DeleteBook(int id);
         void FiltrationBooks(DataGridView dataGridView, string parameter, string value);
         void FindBooks(DataGridView dataGridView, Book book);
+
+        void DeleteAllBooks();
     }
 }

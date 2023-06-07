@@ -198,6 +198,17 @@ namespace Kyrs_OOP_CSharp.repository
             connection.Close();
             return booksName;
         }
+
+        public void DeleteAllBooks()
+        {
+            connection.Open();
+            using (var command = new SqliteCommand($@"DELETE FROM books",
+                    connection))
+            {
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+        }
     }
 }
 

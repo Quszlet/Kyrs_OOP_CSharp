@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Kyrs_OOP_CSharp.repository
 {
@@ -28,11 +30,11 @@ namespace Kyrs_OOP_CSharp.repository
             connection.Close();
         }
 
-        public void UpdateCustomer(int id, string name, string surname, string returnDate)
+        public void UpdateCustomer(int id, string name, string surname, string number, string returnDate)
         {
             connection.Open();
             using (var command = new SqliteCommand($@"
-                    UPDATE customers SET name = '{name}', surname = '{surname}', 
+                    UPDATE customers SET name = '{name}', surname = '{surname}', number_phone = '{number}',
                     return_data = '{returnDate}' WHERE id = {id}",
                     connection))
             {
@@ -45,7 +47,7 @@ namespace Kyrs_OOP_CSharp.repository
         {
             connection.Open();
             using (var command = new SqliteCommand($@"
-                    SELECT customers.id, customers.name, customers.surname, books.book_name,
+                    SELECT customers.id, customers.name, customers.surname, customers.number_phone, books.book_name,
                     books.author_name || ' ' || books.author_surname AS author, 
                     customers.taking_data, customers.return_data  
                     FROM customers JOIN books ON customers.book_id = books.id WHERE {parameter} LIKE '%{value}%'",
@@ -58,29 +60,31 @@ namespace Kyrs_OOP_CSharp.repository
 
                     dataTable.Columns[1].ColumnName = "Имя";
                     dataTable.Columns[2].ColumnName = "Фамилия";
-                    dataTable.Columns[3].ColumnName = "Название книги";
-                    dataTable.Columns[4].ColumnName = "Автор";
-                    dataTable.Columns[5].ColumnName = "Дата взятия книги";
-                    dataTable.Columns[6].ColumnName = "Дата возврата книги";
+                    dataTable.Columns[3].ColumnName = "Номер";
+                    dataTable.Columns[4].ColumnName = "Название книги";
+                    dataTable.Columns[5].ColumnName = "Автор";
+                    dataTable.Columns[6].ColumnName = "Дата взятия книги";
+                    dataTable.Columns[7].ColumnName = "Дата возврата книги";
 
+                    dataTable.Columns[5].DataType = typeof(string);
                     dataTable.Columns.Add("Просрочено дней");
 
                     for (int i = 0; i < dataTable.Rows.Count; i++)
                     {
                         DateTime currentDate = DateTime.Now.Date;
 
-                        DateTime returnDate = DateTime.ParseExact(dataTable.Rows[i][6].ToString(),
+                        DateTime returnDate = DateTime.ParseExact(dataTable.Rows[i][7].ToString(),
                                                                "dd-MM-yyyy", null);
 
                         TimeSpan overdueDays = currentDate - returnDate;
 
                         if (overdueDays.TotalDays > 0)
                         {
-                            dataTable.Rows[i][7] = overdueDays.TotalDays;
+                            dataTable.Rows[i][8] = overdueDays.TotalDays;
                         }
                         else
                         {
-                            dataTable.Rows[i][7] = 0;
+                            dataTable.Rows[i][8] = 0;
                         }
                     }
 
@@ -94,12 +98,13 @@ namespace Kyrs_OOP_CSharp.repository
             connection.Close();
         }
 
-        public void FindCustomers(DataGridView dataGridView, string name, string surname)
+        public void FindCustomers(DataGridView dataGridView, string name, string surname, string number)
         {
             dataGridView.ClearSelection();
             connection.Open();
             using (var command = new SqliteCommand($@"
-                    SELECT id FROM customers WHERE name LIKE '%{name}%' AND surname LIKE '%{surname}%'",
+                    SELECT id FROM customers WHERE name LIKE '%{name}%' AND surname LIKE '%{surname}%'
+                    AND number_phone LIKE '%{number}%'",
                     connection))
             {
                 using (var reader = command.ExecuteReader())
@@ -125,7 +130,7 @@ namespace Kyrs_OOP_CSharp.repository
         {
             connection.Open();
             using (var command = new SqliteCommand(@"
-                    SELECT customers.id, customers.name, customers.surname, books.book_name,
+                    SELECT customers.id,customers.name, customers.surname, customers.number_phone, books.book_name,
                     books.author_name || ' ' || books.author_surname AS author, 
                     customers.taking_data, customers.return_data  
                     FROM customers JOIN books ON customers.book_id = books.id;",
@@ -138,29 +143,31 @@ namespace Kyrs_OOP_CSharp.repository
 
                     dataTable.Columns[1].ColumnName = "Имя";
                     dataTable.Columns[2].ColumnName = "Фамилия";
-                    dataTable.Columns[3].ColumnName = "Название книги";
-                    dataTable.Columns[4].ColumnName = "Автор";
-                    dataTable.Columns[5].ColumnName = "Дата взятия книги";
-                    dataTable.Columns[6].ColumnName = "Дата возврата книги";
+                    dataTable.Columns[3].ColumnName = "Номер";
+                    dataTable.Columns[4].ColumnName = "Название книги";
+                    dataTable.Columns[5].ColumnName = "Автор";
+                    dataTable.Columns[6].ColumnName = "Дата взятия книги";
+                    dataTable.Columns[7].ColumnName = "Дата возврата книги";
 
                     dataTable.Columns.Add("Просрочено дней");
+                    dataTable.Columns[5].DataType = typeof(string);
 
                     for (int i = 0; i < dataTable.Rows.Count; i++)
                     {
                         DateTime currentDate = DateTime.Now.Date;
 
-                        DateTime returnDate = DateTime.ParseExact(dataTable.Rows[i][6].ToString(),
+                        DateTime returnDate = DateTime.ParseExact(dataTable.Rows[i][7].ToString(),
                                                                "dd-MM-yyyy", null);
 
                         TimeSpan overdueDays = currentDate - returnDate;
 
                         if (overdueDays.TotalDays > 0)
                         {
-                            dataTable.Rows[i][7] = overdueDays.TotalDays;
+                            dataTable.Rows[i][8] = overdueDays.TotalDays;
                         }
                         else
                         {
-                            dataTable.Rows[i][7] = 0;
+                            dataTable.Rows[i][8] = 0;
                         }
                     }
 
@@ -178,8 +185,8 @@ namespace Kyrs_OOP_CSharp.repository
         {
             connection.Open();
             using (var command = new SqliteCommand($@"
-                    INSERT INTO customers (name, surname, book_id, taking_data, return_data) 
-                    VALUES ('{customer.Name}', '{customer.Surname}', '{customer.IdBook}', '{customer.TakingDate}',
+                    INSERT INTO customers (name, surname, number_phone, book_id, taking_data, return_data) 
+                    VALUES ('{customer.Name}',  '{customer.Surname}', '{customer.Number}', '{customer.IdBook}', '{customer.TakingDate}',
                     '{customer.ReturnDate}')",
                     connection))
             {
@@ -188,14 +195,14 @@ namespace Kyrs_OOP_CSharp.repository
             connection.Close();
         }
 
-        public int GetCustomer(string name, string surname, int bookId)
+        public int GetCustomer(string name, string surname, string number, int bookId)
         {
             int id = -1;
 
             connection.Open();
             using (var command = new SqliteCommand($@"
                     SELECT id FROM customers WHERE name = '{name}' AND surname = '{surname}'
-                    AND book_id = '{bookId}'",
+                    AND number_phone = '{number}' AND book_id = '{bookId}'",
                     connection))
             {
                 using (var reader = command.ExecuteReader())
@@ -209,6 +216,17 @@ namespace Kyrs_OOP_CSharp.repository
             }
             connection.Close();
             return id;
+        }
+
+        public void DeleteAllCustomers()
+        {
+            connection.Open();
+            using (var command = new SqliteCommand($@"DELETE FROM customers",
+                    connection))
+            {
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
         }
     }
 }

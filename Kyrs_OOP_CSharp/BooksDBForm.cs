@@ -23,6 +23,8 @@ namespace Kyrs_OOP_CSharp
         {
             BookRepository.GetAllBooks(dataGridView1);
             dataGridView1.ClearSelection();
+            textBox6.Enabled = false;
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -70,6 +72,7 @@ namespace Kyrs_OOP_CSharp
                     BookRepository.SaveBook(book);
                     BookRepository.GetAllBooks(dataGridView1);
                     dataGridView1.ClearSelection();
+                    textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                     dataGridView1.Rows[dataGridView1.Rows.Count - 2].Selected = true;
                     MessageBox.Show("Новая книга добавлена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
@@ -82,6 +85,7 @@ namespace Kyrs_OOP_CSharp
                     BookRepository.UpdateBook(book);
                     BookRepository.GetAllBooks(dataGridView1);
                     dataGridView1.ClearSelection();
+                    textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                     dataGridView1.Rows[indRow].Selected = true;
                     MessageBox.Show("Книга изменена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
@@ -92,6 +96,14 @@ namespace Kyrs_OOP_CSharp
                     theme = textBox5.Text;
                     book = new Book(idChange, bookName, authorName, authorSurname, theme);
                     BookRepository.FindBooks(dataGridView1, book);
+                    if (dataGridView1.SelectedRows.Count <= 0)
+                    {
+                        MessageBox.Show("Запись не найдена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Запись найдена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                     break;
             }
         }
@@ -101,12 +113,15 @@ namespace Kyrs_OOP_CSharp
             switch (comboBox2.SelectedIndex)
             {
                 case 0:
+                    button6.Visible = false;
                     button1.Text = "Добавить";
                     break;
                 case 1:
+                    button6.Visible = false;
                     button1.Text = "Изменить";
                     break;
                 case 2:
+                    button6.Visible = true;
                     button1.Text = "Найти";
                     break;
             }
@@ -116,6 +131,7 @@ namespace Kyrs_OOP_CSharp
         {
             BookRepository.DeleteBook(idChange);
             BookRepository.GetAllBooks(dataGridView1);
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
             MessageBox.Show("Книга удалена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -142,12 +158,14 @@ namespace Kyrs_OOP_CSharp
                         break;
                 }
                 BookRepository.FiltrationBooks(dataGridView1, parameter, textBox1.Text);
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
             }
             else
             {
                 label9.Text = "Фильрация отключена";
                 label9.ForeColor = Color.Red;
                 BookRepository.GetAllBooks(dataGridView1);
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
             }
         }
 
@@ -191,7 +209,7 @@ namespace Kyrs_OOP_CSharp
         {
             TextBox textBox = (TextBox)sender;
 
-            Regex regexString = new(@"^[\p{IsCyrillic}0-9]+[\-\s]{0,1}[\p{IsCyrillic}0-9]*$", RegexOptions.IgnorePatternWhitespace);
+            Regex regexString = new(@"^[\p{IsCyrillic}0-9]+[\-\s]{0,1}[\p{IsCyrillic}0-9]*[\-\s]{0,1}[\p{IsCyrillic}0-9]*$", RegexOptions.IgnorePatternWhitespace);
 
             if (!regexString.IsMatch(textBox.Text))
             {
@@ -261,6 +279,43 @@ namespace Kyrs_OOP_CSharp
             {
                 textBox.BackColor = Color.White;
             }
+        }
+
+        private void dataGridView1_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count <= 1)
+            {
+                button5.Enabled = false;
+                button3.Enabled = false;
+            }
+            else
+            {
+                button5.Enabled = true;
+                button3.Enabled = true;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            BookRepository.DeleteAllBooks();
+            BookRepository.GetAllBooks(dataGridView1);
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
+            MessageBox.Show("Все книги удалены", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
         }
     }
 }

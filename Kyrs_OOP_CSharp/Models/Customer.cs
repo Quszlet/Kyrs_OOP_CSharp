@@ -11,6 +11,7 @@ namespace Kyrs_OOP_CSharp
         public string Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        public string Number { get; set; }
         public int IdBook { get; set; }
         public string TakingDate { get; set; }
         public string ReturnDate { get; set; }
@@ -20,10 +21,11 @@ namespace Kyrs_OOP_CSharp
 
         }
 
-        public Customer(string name, string surname, int idBook, string takingDate, string returnDate)
+        public Customer(string name, string surname, string number,int idBook, string takingDate, string returnDate)
         {
             Name = name;
             Surname = surname;
+            Number = number;
             IdBook = idBook;
             TakingDate = takingDate;
             ReturnDate = returnDate;

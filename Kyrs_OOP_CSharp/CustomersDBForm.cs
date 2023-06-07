@@ -46,8 +46,21 @@ namespace Kyrs_OOP_CSharp
             dateTimePicker2.Value = dateTimePicker2.Value.AddDays(1);
             CustomerRepository.GetAllCustomers(dataGridView1);
             dataGridView1.ClearSelection();
-            comboBox3.Items.AddRange(BookRepository.GetAllAuthors().ToArray());
-            comboBox3.SelectedIndex = 0;
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
+
+
+            var arrayAuthors = BookRepository.GetAllAuthors().ToArray();
+
+            if (arrayAuthors.Length != 0)
+            {
+                button1.Enabled = true;
+                comboBox3.Items.AddRange(arrayAuthors);
+                comboBox3.SelectedIndex = 0;
+            }
+            else
+            {
+                button1.Enabled = false;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,7 +77,13 @@ namespace Kyrs_OOP_CSharp
                 return;
             }
 
-            string customerName, customerSurname, returnDate, takingDate, author, bookName;
+            if (textBox4.Text == "")
+            {
+                MessageBox.Show("Введите номер клиента!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string customerName, customerSurname, customerNumber, returnDate, takingDate, author, bookName;
             string[] authorNameSurname;
             int bookId;
             Customer customer;
@@ -74,6 +93,7 @@ namespace Kyrs_OOP_CSharp
                     button4.Text = "Показать должников";
                     customerName = textBox2.Text;
                     customerSurname = textBox3.Text;
+                    customerNumber = textBox4.Text;
                     takingDate = dateTimePicker1.Value.ToString("dd-MM-yyyy");
                     returnDate = dateTimePicker2.Value.ToString("dd-MM-yyyy");
                     author = comboBox3.Text;
@@ -87,16 +107,17 @@ namespace Kyrs_OOP_CSharp
                         return;
                     }
 
-                    if (CustomerRepository.GetCustomer(customerName, customerSurname, bookId) != -1)
+                    if (CustomerRepository.GetCustomer(customerName, customerSurname, customerNumber, bookId) != -1)
                     {
                         MessageBox.Show("Данный клиент уже взял такую книгу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-                    customer = new Customer(customerName, customerSurname, bookId, takingDate, returnDate);
+                    customer = new Customer(customerName, customerSurname, customerNumber, bookId, takingDate, returnDate);
                     CustomerRepository.SaveCustomer(customer);
                     CustomerRepository.GetAllCustomers(dataGridView1);
                     dataGridView1.ClearSelection();
+                    textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                     dataGridView1.Rows[dataGridView1.Rows.Count - 2].Selected = true;
                     MessageBox.Show("Новая клиент добавлен", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
@@ -104,16 +125,34 @@ namespace Kyrs_OOP_CSharp
                     button4.Text = "Показать должников";
                     customerName = textBox2.Text;
                     customerSurname = textBox3.Text;
+                    customerNumber = textBox4.Text;
                     returnDate = dateTimePicker2.Value.ToString("dd-MM-yyyy");
-                    CustomerRepository.UpdateCustomer(idChange, customerName, customerSurname, returnDate);
+
+                    if (dateTimePicker2.Value < dateTimePicker1.Value)
+                    {
+                        MessageBox.Show("Дата возврата должна быть позже даты взятия!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    CustomerRepository.UpdateCustomer(idChange, customerName, customerSurname, customerNumber, returnDate);
                     CustomerRepository.GetAllCustomers(dataGridView1);
                     dataGridView1.ClearSelection();
+                    textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                     MessageBox.Show("Клиент изменен", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case 2:
                     customerName = textBox2.Text;
                     customerSurname = textBox3.Text;
-                    CustomerRepository.FindCustomers(dataGridView1, customerName, customerSurname);
+                    customerNumber = textBox4.Text;
+                    CustomerRepository.FindCustomers(dataGridView1, customerName, customerSurname, customerNumber);
+                    if (dataGridView1.SelectedRows.Count <= 0)
+                    {
+                        MessageBox.Show("Запись не найдена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Запись найдена", "Учет книг", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                     break;
             }
         }
@@ -169,18 +208,21 @@ namespace Kyrs_OOP_CSharp
             switch (comboBox2.SelectedIndex)
             {
                 case 0:
+                    button7.Visible = false;
                     button1.Text = "Добавить";
                     dateTimePicker2.Enabled = true;
                     comboBox3.Enabled = true;
                     comboBox4.Enabled = true;
                     break;
                 case 1:
+                    button7.Visible = false;
                     button1.Text = "Изменить";
                     dateTimePicker2.Enabled = true;
                     comboBox3.Enabled = false;
                     comboBox4.Enabled = false;
                     break;
                 case 2:
+                    button7.Visible = true;
                     button1.Text = "Найти";
                     dateTimePicker2.Enabled = false;
                     comboBox3.Enabled = false;
@@ -197,8 +239,9 @@ namespace Kyrs_OOP_CSharp
                 DataGridViewRow dataGridViewRow = dataGridView.Rows[e.RowIndex];
                 textBox2.Text = dataGridViewRow.Cells[1].Value.ToString();
                 textBox3.Text = dataGridViewRow.Cells[2].Value.ToString();
-                dateTimePicker1.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString());
-                dateTimePicker2.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
+                textBox4.Text = dataGridViewRow.Cells[3].Value.ToString();
+                dateTimePicker1.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
+                dateTimePicker2.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString());
                 comboBox3.SelectedItem = dataGridViewRow.Cells[4].Value;
                 comboBox4.SelectedItem = dataGridViewRow.Cells[3].Value;
             }
@@ -210,7 +253,7 @@ namespace Kyrs_OOP_CSharp
             {
                 e.Cancel = true;
                 dateTimePicker.Focus();
-                MessageBox.Show("Нельзя выбрать эту дату!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Нельзя выбрать эту дату возврата!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -220,7 +263,8 @@ namespace Kyrs_OOP_CSharp
             CustomerRepository.DeleteCustomer(idChange);
             CustomerRepository.GetAllCustomers(dataGridView1);
             dataGridView1.ClearSelection();
-            MessageBox.Show("Клиент удалена", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
+            MessageBox.Show("Клиент удален", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -249,18 +293,21 @@ namespace Kyrs_OOP_CSharp
                         parameter = "surname";
                         break;
                     case 2:
-                        parameter = "books.book_name";
+                        parameter = "number_phone";
                         break;
                     case 3:
-                        parameter = "books.author_name || ' ' || books.author_surname";
+                        parameter = "books.book_name";
                         break;
                     case 4:
-                        parameter = "taking_data";
+                        parameter = "books.author_name || ' ' || books.author_surname";
                         break;
                     case 5:
-                        parameter = "return_data";
+                        parameter = "taking_data";
                         break;
                     case 6:
+                        parameter = "return_data";
+                        break;
+                    case 7:
                         string? cellValue;
                         for (int i = dataGridView1.Rows.Count - 2; i >= 0; i--)
                         {
@@ -273,12 +320,14 @@ namespace Kyrs_OOP_CSharp
                         return;
                 }
                 CustomerRepository.FiltrationCustomers(dataGridView1, parameter, textBox1.Text);
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
             }
             else
             {
                 label1.Text = "Фильрация отключена";
                 label1.ForeColor = Color.Red;
                 CustomerRepository.GetAllCustomers(dataGridView1);
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
             }
         }
 
@@ -289,17 +338,19 @@ namespace Kyrs_OOP_CSharp
                 string? cellValue;
                 for (int i = dataGridView1.Rows.Count - 2; i >= 0; i--)
                 {
-                    cellValue = dataGridView1.Rows[i].Cells[7].Value.ToString();
+                    cellValue = dataGridView1.Rows[i].Cells[8].Value.ToString();
                     if (cellValue == "0")
                     {
                         dataGridView1.Rows.RemoveAt(i);
                     }
                 }
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                 button4.Text = "Показать клиентов";
             }
             else
             {
                 CustomerRepository.GetAllCustomers(dataGridView1);
+                textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
                 button4.Text = "Показать должников";
             }
         }
@@ -314,6 +365,57 @@ namespace Kyrs_OOP_CSharp
             ChooseDBForm chooseDBForm = new ChooseDBForm(FilePathDB);
             chooseDBForm.Show();
             this.Close();
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox4_Validating(object sender, CancelEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+
+            Regex regexString = new(@"^(\+7|8)?\s?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$", RegexOptions.IgnorePatternWhitespace);
+
+            if (!regexString.IsMatch(textBox.Text))
+            {
+                e.Cancel = true;
+                textBox.Focus();
+                textBox.BackColor = Color.Red;
+                MessageBox.Show("Ввести необходимо номер такого формата: +7 (922) 555-12-34", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                textBox.BackColor = Color.White;
+            }
+        }
+
+        private void dataGridView1_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count == 1)
+            {
+                button5.Enabled = false;
+                button6.Enabled = false;
+            }
+            else
+            {
+                button5.Enabled = true;
+                button6.Enabled = true;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            CustomerRepository.DeleteAllCustomers();
+            CustomerRepository.GetAllCustomers(dataGridView1);
+            textBox6.Text = $"{dataGridView1.Rows.Count - 1}";
+            MessageBox.Show("Все клиенты удалены", "Учет клиентов", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
         }
     }
 }
